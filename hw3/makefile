@@ -3,7 +3,7 @@
 
 CC = g++
 
-CFLAGS = -L/usr/lib -lssl -lcrypto
+CFLAGS = -L/usr/lib -lssl -lcrypto -lm -lpthread
 
 EXECUTABLES = cbc-enc cbc-dec ctr-enc ctr-dec
 
