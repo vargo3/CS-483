@@ -100,14 +100,12 @@ int main(int argc, char **argv)
 		t_data->len = in_len;
 		t_data->out = out;
 		t_data->num = i;
-		printf("test1: %d\n", (in_len / BLOCK_SIZE)+1);
 		pthread_create(&tid[i], NULL, pthread_function, t_data);
 	}
 
 	for (int i = 0; i < (in_len / BLOCK_SIZE)+1; i++)
 		pthread_join(tid[i], NULL);
 
-	printf("final len: %d\n", in_len);
 	print_file(out_file, out, in_len + BLOCK_SIZE);
 	if (key != NULL) free(key);
 	if (in != NULL) free(in);
@@ -128,10 +126,8 @@ void *pthread_function(void *arg)
 		pthread_exit(NULL);
 	}
 	iv_cpy = strdup(me->iv);
-	printf("test2a\n");
 	for (int i = 0; i < me->num+1; i++) str_add1(iv_cpy, BLOCK_SIZE);
 	c_block = encode(me->key, iv_cpy, BLOCK_SIZE);
-	printf("test2b\n");
 	if (c_block == NULL) pthread_exit(NULL);
 	for (j = 0; j < BLOCK_SIZE && (me->num * BLOCK_SIZE)+j < me->len; j++) c_block[j] = (me->in + (me->num * BLOCK_SIZE))[j] ^ c_block[j];
 	memcpy(me->out + (me->num * BLOCK_SIZE) + BLOCK_SIZE, c_block, j);
