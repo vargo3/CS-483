@@ -2,7 +2,7 @@
 
 import random
 import argparse
-bit_len_n = 128
+bit_len_n = 256
 
 parser = argparse.ArgumentParser(description='Encrypt some integer.')
 parser.add_argument('-i', '--input_file', required=True)
