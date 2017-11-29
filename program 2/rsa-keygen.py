@@ -1,6 +1,7 @@
 #Jacob Vargo
 
 import random
+import argparse
 
 def egcd(test_val, b):
 	"extended euclidean algorithm"
@@ -17,6 +18,8 @@ def mod_inverse(test_val, mod):
 	return x % mod
 
 def is_probable_prime(n):
+	if n % 2 == 0:
+		return False
 	s = n - 1
 	t = 0
 	while s % 2 == 0:
@@ -36,7 +39,13 @@ def is_probable_prime(n):
 		            val = (val ** 2) % n
 	return True
 
-bit_len_n = 6
+parser = argparse.ArgumentParser(description='Encrypt some integer.')
+parser.add_argument('-p', '--public_key_file', required=True)
+parser.add_argument('-s', '--secret_key_file', required=True)
+parser.add_argument('-n', '--number_of_bits', required=True)
+args = parser.parse_args()
+
+bit_len_n = int(args.number_of_bits)
 p = random.getrandbits(bit_len_n)
 while not is_probable_prime(p):
 	p = random.getrandbits(bit_len_n)
@@ -47,9 +56,14 @@ N = p*q
 order = (p-1) * (q-1)
 e = 17
 d = mod_inverse(e, order)
-with open('pubKey.txt', 'w') as file:
+with open(args.public_key_file, 'w') as file:
+	file.write(str(bit_len_n) + '\n')
 	file.write(str(N) + '\n')
-	file.write(str(e) + '\n')
-with open('privKey.txt', 'w') as file:
+	file.write(str(e))
+with open(args.secret_key_file, 'w') as file:
+	file.write(str(bit_len_n) + '\n')
 	file.write(str(N) + '\n')
-	file.write(str(d) + '\n')
+	file.write(str(d))
+
+
+

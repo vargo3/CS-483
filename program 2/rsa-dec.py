@@ -10,19 +10,20 @@ parser.add_argument('-k', '--key_file', required=True)
 args = parser.parse_args()
 
 with open(args.input_file, 'r') as file:
-	c = int(file.readline()[:-1])
+	c = int(file.readline())
 with open(args.key_file, 'r') as file:
+	bit_len_n = int(file.readline()[:-1])
 	N = int(file.readline()[:-1])
-	d = int(file.readline()[:-1])
+	d = int(file.readline())
 
 m = pow(c, d, N)
 m_list = list(hex(m)[2:-1])
-#m == (0x00 || 0x02 || r || 0x00 || m)
-#size of r = n/2, so 0x00 dividing r and m is in the second half
-for i in range(len(m_list)/2):
-	if m_list[i+len(m_list)/2] == '0' and m_list[i+len(m_list)/2+1] == '0':
-		start = i+3
+#m = (0x00 || 0x02 || r || 0x00 || m)
+#m_list = ['0', '0', '0', '2'] + r_list + ['0', '0'] + m_list
+for i in range(len(m_list)-1):
+	if m_list[i] == '0' and m_list[i+1] == '0':
+		#print "".join(m_list[i:])
+		m = int("".join(m_list[i:]),16)
 		break
-m = int("".join(m_list[start:]),16)
 with open(args.out_file, 'w') as file:
-	file.write(str(c))
+	file.write(str(m))
